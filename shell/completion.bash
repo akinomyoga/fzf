@@ -43,7 +43,7 @@ __fzf_defaults() {
 }
 
 __fzf_comprun() {
-  if [[ "$(type -t _fzf_comprun 2>&1)" = function ]]; then
+  if declare -F _fzf_comprun > /dev/null; then
     _fzf_comprun "$@"
   elif [[ -n "${TMUX_PANE-}" && ( "${FZF_TMUX:-0}" != 0 || -n "${FZF_TMUX_OPTS-}" ) ]]; then
     shift

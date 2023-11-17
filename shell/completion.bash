@@ -434,6 +434,9 @@ _fzf_proc_completion_post() {
 if ! declare -F __fzf_list_hosts > /dev/null; then
   __fzf_list_hosts() {
     (
+      set +f
+      shopt -u failglob
+      shopt -s nullglob
       command tail -n +1 ~/.ssh/config ~/.ssh/config.d/* /etc/ssh/ssh_config 2> /dev/null |
         command awk 'tolower($1) ~ /^host(name)?$/ {for (i = 2; i <= NF; i++) if ($1 !~ /[*?%]/) print $1 " " $i}' |
       command grep -oE '^[[a-z0-9.,:-]+' ~/.ssh/known_hosts 2> /dev/null |

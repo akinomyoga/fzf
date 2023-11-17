@@ -334,9 +334,7 @@ __fzf_generic_path_completion() {
       [[ "$dir" =~ /$ ]] || dir="$dir"/
     done
   else
-    shift
-    shift
-    shift
+    shift 3
     _fzf_handle_dynamic_completion "$cmd" "$@"
   fi
 }

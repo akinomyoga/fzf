@@ -472,7 +472,7 @@ _fzf_proc_completion_post() {
 #   # Use bash-completions’s _known_hosts_real() for getting the list of hosts
 #   __fzf_list_hosts() {
 #     # Set the local attribute for any non-local variable that is set by _known_hosts_real()
-#     local COMPREPLY=()
+#     local -a COMPREPLY=()
 #     _known_hosts_real ''
 #     printf '%s\n' "${COMPREPLY[@]}" | command sort -u --version-sort
 #   }

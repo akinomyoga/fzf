@@ -45,7 +45,7 @@ __fzf_defaults() {
 __fzf_comprun() {
   if [[ "$(type -t _fzf_comprun 2>&1)" = function ]]; then
     _fzf_comprun "$@"
-  elif [[ -n "${TMUX_PANE-}" ]] && { [[ "${FZF_TMUX:-0}" != 0 ]] || [[ -n "${FZF_TMUX_OPTS-}" ]]; }; then
+  elif [[ -n "${TMUX_PANE-}" && ( "${FZF_TMUX:-0}" != 0 || -n "${FZF_TMUX_OPTS-}" ) ]]; then
     shift
     fzf-tmux ${FZF_TMUX_OPTS:--d${FZF_TMUX_HEIGHT:-40%}} -- "$@"
   else
@@ -290,14 +290,14 @@ __fzf_generic_path_completion() {
   COMPREPLY=()
   trigger=${FZF_COMPLETION_TRIGGER-'**'}
   [[ $COMP_CWORD -ge 0 ]] && cur="${COMP_WORDS[COMP_CWORD]}"
-  if [[ "$cur" == *"$trigger" ]] && [[ $cur != *'$('* ]] && [[ $cur != *':='* ]] && [[ $cur != *'`'* ]]; then
+  if [[ "$cur" == *"$trigger" && $cur != *'$('* && $cur != *':='* && $cur != *'`'* ]]; then
     base=${cur:0:${#cur}-${#trigger}}
     eval "base=$base" 2> /dev/null || return
 
     dir=
     [[ $base = *"/"* ]] && dir="$base"
     while true; do
-      if [[ -z "$dir" ]] || [[ -d "$dir" ]]; then
+      if [[ -z "$dir" || -d "$dir" ]]; then
         leftover=${base/#"$dir"}
         leftover=${leftover/#\/}
         [[ -z "$dir" ]] && dir='.'
@@ -321,7 +321,7 @@ __fzf_generic_path_completion() {
           done
         )
         matches=${matches% }
-        [[ -z "$3" ]] && [[ "${__fzf_nospace_commands-}" = *" ${COMP_WORDS[0]} "* ]] && matches="$matches "
+        [[ -z "$3" && "${__fzf_nospace_commands-}" = *" ${COMP_WORDS[0]} "* ]] && matches="$matches "
         if [[ -n "$matches" ]]; then
           COMPREPLY=( "$matches" )
         else
@@ -368,7 +368,7 @@ _fzf_complete() {
   trigger=${FZF_COMPLETION_TRIGGER-'**'}
   cmd="${COMP_WORDS[0]}"
   cur="${COMP_WORDS[COMP_CWORD]}"
-  if [[ "$cur" == *"$trigger" ]] && [[ $cur != *'$('* ]] && [[ $cur != *':='* ]] && [[ $cur != *'`'* ]]; then
+  if [[ "$cur" == *"$trigger" && $cur != *'$('* && $cur != *':='* && $cur != *'`'* ]]; then
     cur=${cur:0:${#cur}-${#trigger}}
 
     selected=$(

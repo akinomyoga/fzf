@@ -19,14 +19,14 @@ if [[ $- =~ i ]]; then
 #   _fzf_compgen_path() {
 #     echo "$1"
 #     command find -L "$1" \
-#       -name .git -prune -o -name .hg -prune -o -name .svn -prune -o \( -type d -o -type f -o -type l \) \
-#       -a -not -path "$1" -print 2> /dev/null | command sed 's@^\./@@'
+#       \( -name .git -o -name .hg -o -name .svn \) -prune -o \( -type d -o -type f -o -type l \) \
+#       -a ! -path "$1" -print 2> /dev/null | command sed 's@^\./@@'
 #   }
 #
 #   _fzf_compgen_dir() {
 #     command find -L "$1" \
-#       -name .git -prune -o -name .hg -prune -o -name .svn -prune -o -type d \
-#       -a -not -path "$1" -print 2> /dev/null | command sed 's@^\./@@'
+#       \( -name .git -o -name .hg -o -name .svn \) -prune -o -type d \
+#       -a ! -path "$1" -print 2> /dev/null | command sed 's@^\./@@'
 #   }
 
 ###########################################################

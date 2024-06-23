@@ -1139,12 +1139,12 @@ mode, you can specify multiple patterns delimited by spaces, such as: \fB'wild
 You can prepend a backslash to a space (\fB\\ \fR) to match a literal space
 character.
 
-.SS Exact\-match (quoted)
+.SS Exact-match (quoted)
 A term that is prefixed by a single-quote character (\fB'\fR) is interpreted as
-an "exact\-match" (or "non\-fuzzy") term. fzf will search for the exact
+an "exact-match" (or "non\-fuzzy") term. fzf will search for the exact
 occurrences of the string.
 
-.SS Anchored\-match
+.SS Anchored-match
 A term can be prefixed by \fB^\fR, or suffixed by \fB$\fR to become an
 anchored-match term. Then fzf will search for the lines that start with or end
 with the given string. An anchored-match term is also an exact-match term.
@@ -1169,7 +1169,7 @@ boundaries.
 If a term is prefixed by \fB!\fR, fzf will exclude the lines that satisfy the
 term from the result. In this case, fzf performs exact match by default.
 
-.SS Exact\-match by default
+.SS Exact-match by default
 If you don't prefer fuzzy matching and do not wish to "quote" (prefixing with
 \fB'\fR) every word, start fzf with \fB\-e\fR or \fB\-\-exact\fR option. Note that
 when \fB\-\-exact\fR is set, \fB'\fR\-prefix "unquotes" the term.

@@ -274,7 +274,7 @@ _fzf_handle_dynamic_completion() {
     "$REPLY" "$@"
   elif [[ -n "${_fzf_completion_loader-}" ]]; then
     orig_complete=$(complete -p "$orig_cmd" 2> /dev/null)
-    $_fzf_completion_loader "$@"
+    "$_fzf_completion_loader" "$@"
     ret=$?
     # _completion_loader may not have updated completion for the command
     if [[ "$(complete -p "$orig_cmd" 2> /dev/null)" != "$orig_complete" ]]; then
@@ -293,7 +293,7 @@ _fzf_handle_dynamic_completion() {
       fi
     fi
     [[ $ret -eq 0 ]] && return 124
-    return $ret
+    return "$ret"
   fi
 }
 

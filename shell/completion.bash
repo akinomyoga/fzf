@@ -591,27 +591,6 @@ complete | command grep -q __fzf_default_completion ||
   complete | command grep -- '-D$' | command grep -qv _comp_complete_load ||
   complete -D -F __fzf_default_completion -o default -o bashdefault 2> /dev/null
 
-d_cmds="${FZF_COMPLETION_DIR_COMMANDS-cd pushd rmdir}"
-
-# NOTE: $FZF_COMPLETION_PATH_COMMANDS and $FZF_COMPLETION_VAR_COMMANDS are
-# undocumented and subject to change in the future.
-#
-# NOTE: Although we have default completion, we still need to set up completion
-# for each command in case they already have completion set up by another script.
-a_cmds="${FZF_COMPLETION_PATH_COMMANDS-"
-  awk bat cat code diff diff3
-  emacs emacsclient ex file ftp g++ gcc gvim head hg hx java
-  javac ld less more mvim nvim patch perl python ruby
-  sed sftp sort source tail tee uniq vi view vim wc xdg-open
-  basename bunzip2 bzip2 chmod chown curl cp dirname du
-  find git grep gunzip gzip hg jar
-  ln ls mv open rm rsync scp
-  svn tar unzip zip"}"
-v_cmds="${FZF_COMPLETION_VAR_COMMANDS-export unset printenv}"
-
-# Preserve existing completion
-__fzf_orig_completion < <(complete -p $d_cmds $a_cmds $v_cmds unalias kill ssh 2> /dev/null)
-
 if type _comp_load > /dev/null 2>&1; then
   # _comp_load was added in bash-completion 2.12 to replace _completion_loader.
   # We use it without -D option so that it does not use _comp_complete_minimal as the fallback.
@@ -636,31 +615,56 @@ __fzf_defc() {
   fi
 }
 
-# Anything
-for cmd in $a_cmds; do
-  __fzf_defc "$cmd" _fzf_path_completion "-o default -o bashdefault"
-done
-
-# Directory
-for cmd in $d_cmds; do
-  __fzf_defc "$cmd" _fzf_dir_completion "-o bashdefault -o nospace -o dirnames"
-done
-
-# Variables
-for cmd in $v_cmds; do
-  __fzf_defc "$cmd" _fzf_var_completion "-o default -o nospace -v"
-done
-
-# Aliases
-__fzf_defc unalias _fzf_alias_completion "-a"
-
-# Processes
-__fzf_defc kill _fzf_proc_completion "-o default -o bashdefault"
-
-# ssh
-__fzf_defc ssh _fzf_complete_ssh "-o default -o bashdefault"
-
-unset cmd d_cmds a_cmds v_cmds
+__fzf_initialize() {
+  local cmd d_cmds a_cmds v_cmds
+  d_cmds="${FZF_COMPLETION_DIR_COMMANDS-cd pushd rmdir}"
+  
+  # NOTE: $FZF_COMPLETION_PATH_COMMANDS and $FZF_COMPLETION_VAR_COMMANDS are
+  # undocumented and subject to change in the future.
+  #
+  # NOTE: Although we have default completion, we still need to set up
+  # completion for each command in case they already have completion set up by
+  # another script.
+  a_cmds="${FZF_COMPLETION_PATH_COMMANDS-"
+    awk bat cat code diff diff3
+    emacs emacsclient ex file ftp g++ gcc gvim head hg hx java
+    javac ld less more mvim nvim patch perl python ruby
+    sed sftp sort source tail tee uniq vi view vim wc xdg-open
+    basename bunzip2 bzip2 chmod chown curl cp dirname du
+    find git grep gunzip gzip hg jar
+    ln ls mv open rm rsync scp
+    svn tar unzip zip"}"
+  v_cmds="${FZF_COMPLETION_VAR_COMMANDS-export unset printenv}"
+  
+  # Preserve existing completion
+  __fzf_orig_completion < <(complete -p $d_cmds $a_cmds $v_cmds unalias kill ssh 2> /dev/null)
+  
+  # Anything
+  for cmd in $a_cmds; do
+    __fzf_defc "$cmd" _fzf_path_completion "-o default -o bashdefault"
+  done
+  
+  # Directory
+  for cmd in $d_cmds; do
+    __fzf_defc "$cmd" _fzf_dir_completion "-o bashdefault -o nospace -o dirnames"
+  done
+  
+  # Variables
+  for cmd in $v_cmds; do
+    __fzf_defc "$cmd" _fzf_var_completion "-o default -o nospace -v"
+  done
+  
+  # Aliases
+  __fzf_defc unalias _fzf_alias_completion "-a"
+  
+  # Processes
+  __fzf_defc kill _fzf_proc_completion "-o default -o bashdefault"
+  
+  # ssh
+  __fzf_defc ssh _fzf_complete_ssh "-o default -o bashdefault"
+ 
+  unset -f "$FUNCNAME"
+}
 
 _fzf_setup_completion() {
   local kind fn cmd
